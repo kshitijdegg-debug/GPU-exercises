@@ -1,0 +1,15 @@
+-> In Montmogery pointwise multiplication - 
+We want to compute (aXb) mod q, where q is large prime divisor and because (mod q) operation is expensive, we replace the modulus operation with only addition and shifts in Montmogery reduction.
+
+We pick 'R>q and gcd(R,q)=1'. Usually R=2^k, where k=64 is word size, so division by R is bit shift.
+Define q'=-q^-1 (mod R), a'=aR (mod q), b'=bR (mod q)
+
+MontMul(a',b') = c' = (a'Xb'XR^-1) mod q = (aR mod q)X(bR mod q)XR^-1 mod q = (abR) mod q.
+To get back to normal form, do - MontMul(c',1)=(c'XR^-1) mod q = c = ab.
+
+This is done via-
+t = a' * b' 
+m = (t * q') mod R // q' chosen so that (q * q') ≡ -1 mod R 
+u = (t + m * q) / R 
+if (u >= q) u -= q 
+return u
